@@ -4,12 +4,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flash_chat/app_theme.dart';
+import '../app_theme.dart';
 
 final _firestore = Firestore.instance;
 FirebaseUser loggedInUser;
 
 class ChatScreen extends StatefulWidget {
   static const String id = 'chat_screen';
+
   @override
   _ChatScreenState createState() => _ChatScreenState();
 }
@@ -42,18 +44,53 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        toolbarHeight: 100,
         leading: null,
         actions: <Widget>[
-          IconButton(
+          /*IconButton(
               icon: Icon(Icons.close),
               onPressed: () {
                 _auth.signOut();
                 Navigator.pop(context);
-              }),
+              }),*/
+          IconButton(
+              icon: Icon(
+                Icons.videocam_outlined,
+                size: 28,
+              ),
+              onPressed: () {}),
+          IconButton(
+              icon: Icon(
+                Icons.call,
+                size: 28,
+              ),
+              onPressed: () {}),
         ],
-        title: Text(
+        title:
+            /*Text(
           'Chat',
           style: MyTheme.kAppTitle,
+        ),*/
+            Row(
+          children: [
+            CircleAvatar(
+              radius: 30,
+              backgroundImage: AssetImage('assets/images/wendy.jpg'),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Wendy',
+                  style: MyTheme.chatSenderName,
+                ),
+                Text(
+                  'online',
+                  style: MyTheme.bodyText1.copyWith(fontSize: 18),
+                ),
+              ],
+            ),
+          ],
         ),
         backgroundColor: MyTheme.kPrimaryColor,
       ),
@@ -109,7 +146,7 @@ class MessagesStream extends StatelessWidget {
         if (!snapshot.hasData) {
           return Center(
             child: CircularProgressIndicator(
-              backgroundColor: Colors.deepPurple[500],
+              backgroundColor: Colors.white,
             ),
           );
         }
