@@ -118,7 +118,8 @@ class _ChatScreenState extends State<ChatScreen> {
                     onPressed: () {
                       messageTextController.clear();
                       _firestore.collection('messages').add({
-                        'text': messageText,
+                        //add()針對集合使用
+                        'text': messageText, //程式碼執行時，都會自動在messages的集合內添加文件屬性
                         'sender': loggedInUser.email,
                       });
                     },
@@ -141,18 +142,24 @@ class MessagesStream extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: _firestore.collection('messages').snapshots(),
+      stream: _firestore
+          .collection('messages')
+          .snapshots(), //snapShot隨時監聽message集合的文件
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
+          //如果監聽無data
           return Center(
             child: CircularProgressIndicator(
               backgroundColor: Colors.white,
             ),
           );
         }
-        final messages = snapshot.data.documents.reversed;
-        List<MessageBubble> messageBubbles = [];
+        final messages =
+            snapshot.data.documents.reversed; //將監聽到的文件順序反轉宣告到messages變數
+        List<MessageBubble> messageBubbles =
+            []; //秀出MessageBubble所呈現的格式(bubble:flutter做聊天室訊息的一種特殊方法)
         for (var message in messages) {
+          //利用迴圈宣告變數並把資料讀進變數裡以供MessageBubble這個class使用
           final messageText = message.data['text'];
           final messageSender = message.data['sender'];
 
@@ -190,17 +197,21 @@ class MessageBubble extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.all(10.0),
       child: Column(
-        crossAxisAlignment:
-            isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+        //呈現左右邊訊息
+        crossAxisAlignment: isMe
+            ? CrossAxisAlignment.end
+            : CrossAxisAlignment.start, //判斷是否自己，是(end):不是(start)
         children: <Widget>[
           Text(
-            sender,
+            //
+            sender, //顯示sender名字
             style: TextStyle(
               fontSize: 12.0,
               color: Colors.black54,
             ),
           ),
           Material(
+            //訊息外觀呈現判斷是否為自己
             borderRadius: isMe
                 ? BorderRadius.only(
                     topLeft: Radius.circular(30.0),
